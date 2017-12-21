@@ -1,0 +1,253 @@
+<html>
+<head>
+<title>Virtual Skydiven</title>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+<script src="http://code.jquery.com/jquery-latest.min.js" type="text/javascript"></script>
+<link href="https://fonts.googleapis.com/css?family=Kanit:300,800" rel="stylesheet">
+<style>
+body{font-family: 'Kanit', sans-serif;text-align: center;line-height:1.2;color:#000;}
+h1{font-size:55px;text-transform: uppercase;margin:0px;font-weight: 900;}
+p{margin: 0px 0px 250px 0px;font-size:25px;}
+.introwolk p:after{content:"";max-width: 300px;height: 5px;background-color:#e58934;display: flex;margin: 18px auto 15vh auto;}
+
+.city{min-height: 150vh;background-color: #f5f5f5;background-position: bottom;background-size: cover;}
+.city h1{font-size: 300px;text-transform: none;opacity: 0.2;padding-top:50vh}
+
+.main{padding:1500px 0px;}
+.wolken.boven{opacity:1;position: fixed;width: 100%;display: flex;transition: 2s;top:300px;}
+.wolken.onder{transform:rotate(180deg);opacity:1;position: fixed;width: 100%;display: flex;transition: 2.5s;bottom:300px;}
+.wolken.boven.animationfirst{top:-1000px;}
+.wolken.onder.animationfirst{bottom:-1000px;}
+.wolken.boven.animationfirst.changeani{top:200px;}
+.wolken.onder.animationfirst.changeani{bottom:200px;}
+.wolken img{width: 100%;position:absolute;}
+.wolken img.left{left: -50%;width: 200%;top: -250px;}
+.wolken img.center{left: -25%;}
+.wolken img.right{right: -30%;}
+
+.wolken img.second{transform:rotate3d(180deg);margin-top:-20vh;width: 120%;}
+.wolken img.second.center{width: 160%;}
+.wolken img.third{margin-top:-40vh;}
+.wolken img.third.center{}
+
+.tussenwolken{height: 100vw;}
+
+.wolken{z-index:2;}
+.introwolk{z-index:3;position: relative;}
+.cities{z-index:1;position: relative;}
+</style>
+<script>
+
+</script>
+</head>
+<body id="body">
+	<div class="main">
+		<div class="wolkenfield">
+			<div class="wolken boven" id="wolkenset">
+				<img class="left" src="/virtualskydiven/images/wolken/wolk1.png">
+				<img class="center" src="/virtualskydiven/images/wolken/wolk3.png">
+				<img class="right" src="/virtualskydiven/images/wolken/wolk3.png">
+				<!-- second layer -->
+				<img class="left second" src="/virtualskydiven/images/wolken/wolk1.png">
+				<img class="center second" src="/virtualskydiven/images/wolken/wolk3.png">
+				<img class="right second" src="/virtualskydiven/images/wolken/wolk3.png">
+				<!-- third layer -->
+				<img class="left third" src="/virtualskydiven/images/wolken/wolk1.png">
+				<img class="center third" src="/virtualskydiven/images/wolken/wolk3.png">
+				<img class="right third" src="/virtualskydiven/images/wolken/wolk3.png">
+			</div>
+			<div class="introwolk">
+				<div class="container">
+					<h1>De mooiste locaties</h1>
+					<p>Deze prachtige locaties zijn nog nooit zo dichtbij geweest</p>
+				</div>
+			</div>
+			<div class="cities">
+				<div id="dubai" class="city" style="background-image:url('/virtualskydiven/images/paris.jpg');">
+					<div class="background">
+						<div class="inner">
+							<h1>Dubai</h1>
+						</div>
+					</div>
+				</div>
+				<div class="tussenwolken">
+					<!-- Wolken voor de overgang tussen de cities -->
+				</div>
+				<div id="paris" class="city" style="background-image:url('/virtualskydiven/images/paris.jpg');">
+					<div class="background">
+						<div class="inner">
+							<h1>Paris</h1>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="wolken onder" id="wolkenset">
+				<img class="left" src="/virtualskydiven/images/wolken/wolk1.png">
+				<img class="center" src="/virtualskydiven/images/wolken/wolk3.png">
+				<img class="right" src="/virtualskydiven/images/wolken/wolk3.png">
+				<!-- second layer -->
+				<img class="left second" src="/virtualskydiven/images/wolken/wolk1.png">
+				<img class="center second" src="/virtualskydiven/images/wolken/wolk3.png">
+				<img class="right second" src="/virtualskydiven/images/wolken/wolk3.png">
+				<!-- third layer -->
+				<img class="left third" src="/virtualskydiven/images/wolken/wolk1.png">
+				<img class="center third" src="/virtualskydiven/images/wolken/wolk3.png">
+				<img class="right third" src="/virtualskydiven/images/wolken/wolk3.png">
+			</div>
+		</div>
+	</div>
+	<footer id="footer">
+footer :)
+	</footer>
+<script>
+//default values
+var screenheight = $(window).height();
+var screenwidth = $(window).width();
+var windowheight = screen.height;
+
+//cities
+var citiesheight = $(".cities").height();
+
+var dubaiheight = $("#dubai").height();
+var dubaioffsets = $('#dubai').offset();
+var dubaitop = dubaioffsets.top;
+var dubaitrigger = dubaitop - windowheight;
+var dubaitriggerout = dubaitop + dubaiheight;
+var dubaibottom = dubaitop + windowheight*0.25;
+var dubaiactive = 3;
+
+var scrollback = dubaitop-windowheight-5;
+
+var parisheight = $("#paris").height();
+var parisoffsets = $('#paris').offset();
+var paristop = parisoffsets.top;
+var paristrigger = paristop - windowheight;
+var paristriggerout = paristop + parisheight;
+var parisbottom = paristop + windowheight*0.25;
+var parisactive = 0;
+
+var scrolnow = 0;
+
+var lastScrollTop = 0;
+$(window).scroll(function(event){
+	var st = $(this).scrollTop();
+
+	if (st > lastScrollTop){
+		if($(window).scrollTop() >= dubaitrigger && $(window).scrollTop() <= dubaitriggerout) {
+			console.log('down');
+			dubaiactive=1;
+			parisactive=0;
+			$('.wolken').addClass('changeani');
+			$('html, body').animate({scrollTop: dubaibottom}, 1000);
+			$('.wolken').removeClass('changeani');
+		}
+	} else {
+		if($(window).scrollTop() >= dubaitrigger && $(window).scrollTop() <= dubaitriggerout) {
+			$('.wolken').removeClass('animationfirst');
+			console.log('up');
+			scrolnow = 0;
+			dubaiactive=4;
+			parisactive=0;
+			$('html, body').animate({scrollTop: scrollback}, 1000);
+		}
+	}
+
+    lastScrollTop = st;	
+});
+
+/*
+var lastScrollTop = 0;
+$(window).scroll(function(event){
+var st = $(this).scrollTop();
+
+	
+	//active the city
+    if(dubaiactive==1){
+    	$('html, body').animate({scrollTop: dubaibottom}, 0);
+    }
+    if(dubaiactive==4){
+    	setTimeout(function(){dubaiactive = 3;}, 1000);
+    }
+
+    if(parisactive==1){
+    	$('html, body').animate({scrollTop: parisbottom}, 0);
+    }
+	if(parisactive==4){
+    	setTimeout(function(){parisactive = 3;}, 1000);
+    }
+    if($(window).scrollTop() >= dubaitrigger && $(window).scrollTop() <= dubaitriggerout) {
+
+    	if(dubaiactive==3){
+    		$('.wolken').addClass('animationfirst');
+    		$('html, body').animate({scrollTop: dubaibottom}, 1000);
+    		dubaiactive=1;
+    		scrolnow = 0;
+    	} else {	
+    		setTimeout(function(){scrolnow = 1;}, 1000);
+		    if(dubaiactive==1){
+				if (st > lastScrollTop){
+					if(scrolnow==1){
+						console.log('down');
+						scrolnow = 0;
+						dubaiactive=0;
+						parisactive=3;
+						$('.wolken').addClass('changeani');
+						$('html, body').animate({scrollTop: parisbottom}, 1000);
+						setTimeout(function(){$('.wolken').removeClass('changeani');}, 1000);
+				    }
+				} else {
+			   		if(scrolnow==1){
+						$('.wolken').removeClass('animationfirst');
+						console.log('up');
+						scrolnow = 0;
+						dubaiactive=4;
+						parisactive=0;
+						$('html, body').animate({scrollTop: scrollback}, 1000);
+				    }
+			    }
+		    }
+		}
+    }
+
+    if($(window).scrollTop() >= paristrigger && $(window).scrollTop() <= paristriggerout){
+
+    	if(parisactive==3){
+    		parisactive=1;
+    		scrolnow = 0;
+    	} else {
+    		setTimeout(function(){scrolnow = 1;}, 1000);
+			if(parisactive==1){
+		    	if (st > lastScrollTop){
+					if(scrolnow==1){
+						console.log('PA: down');
+						scrolnow = 0;
+						parisactive=0;
+						dubaiactive=0;
+						$('html, body').animate({scrollTop: $('#footer').offset().top}, 1000);
+				    }
+			    } else {
+			   		if(scrolnow==1){
+						console.log('PA: up');
+						dubaiactive=1;
+	    				scrolnow = 0;
+	    				parisactive = 0;
+						$('html, body').animate({scrollTop: dubaibottom}, 1000);
+				    }
+			    }
+			}
+    	}
+	}
+    lastScrollTop = st;	
+});
+*/
+
+console.log("-----begin----");
+console.log("screenheight: "+screenheight);
+
+console.log("Dubai: "+dubaiheight);
+console.log("Dubai top: "+dubaitop);
+console.log("Dubai bottom: "+dubaitrigger);
+console.log("-----einde----");
+</script>
+</body>
+</html>
